@@ -10,29 +10,27 @@ Copy VARP folder inside _Plugins_ folder. The result will be.
 
 |                                  |                           | 
 |----------------------------------|---------------------------|
-| _/Plugins/VARP/Display_          | Source code of this asset |
-| _/Plugins/VARP/Display/Demo_     | The demo scene |
+| _/Plugins/VARP/Display_          | Source code of this asset. |
+| _/Plugins/VARP/Display/Demo_     | Demo scene. |
 
 The description for each file see below. 
 
 |                      |                                       |
 |----------------------|---------------------------------------|
-| _IDisplay.cs_        | Public API of this asset |
-| _TextDisplay.cs_     | Text display source code |
-| _TargetResolution.cs_| Target resolution settings |
-| _DisplayCursor.cs_   | Cursor movement and window regions |
-| _Xresources.cs_      | Color theme (ScriptableObject) |
-| _TangoTheme.cs_      | Tango color theme |
+| _IDisplay.cs_        | Public API of this asset. |
+| _TextDisplay.cs_     | Text display source code, implementation of _IDisplay_. |
+| _TargetResolution.cs_| Target resolution settings. |
+| _DisplayCursor.cs_   | Cursor movement and screen's regions (windows). |
+| _Xresources.cs_      | Color theme (ScriptableObject). |
+| _TangoTheme.cs_      | Tango color theme (ScriptableObject). |
 
 ## Introduction to API
 
 To instantiate display use `new` operator.
 
 ```C#
-    TextDisplay textDisplay;
-    targetResolution = new TargetResolution(1920, 1080);
-    TargetResolution targetResolution;
-    textDisplay = new TextDisplay ( 64, 24 );
+    var targetResolution = new TargetResolution(1920, 1080);
+    var textDisplay = new TextDisplay ( 64, 24 );
 ```
 To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that `WriteFormat` will produce garbage anyway.
 
