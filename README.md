@@ -51,6 +51,7 @@ Mehtod above will create display with default Tango color theme. To alternate co
 To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that `WriteFormat` will produce garbage anyway.
 
 ```C#
+    textDisplay.Write('C');
     textDisplay.Write("Hello World!");
     textDisplay.WriteLine("Hello World!");
     textDisplay.WriteFormat("\"{0}\"", "Hello World!");
