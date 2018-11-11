@@ -12,6 +12,8 @@ Table 1: The description for each folder.
 |----------------------------------|---------------------------|
 | _/VARP/Display_          | Source code of this asset. |
 | _/VARP/Display/Demo_     | Demo scene. |
+| _/Resources/VARP/DebugDraw  | Font, shaders and materials for this assset. |
+
 
 Table 2: The description for each file. 
 
@@ -27,7 +29,9 @@ Table 2: The description for each file.
 
 ## Installing 
 
-Copy VARP folder inside _Plugins_ folder. Then add demo component _DisplayDemoCameraC_ to your camera. Run scene and play with compentne's values.
+- Copy _VARP_ from _Resources_ folder to _Resources_ folder of your project. 
+- Copy _VARP_ folder inside _Plugins_ folder. 
+- Add demo component _DisplayDemoCameraC_ to your camera. Run scene and play with component's values.
 
 ## Introduction to API
 
@@ -59,4 +63,10 @@ To render display use method _Render_ with two arguments: position and target re
 
 ```C#
     textDisplay.Render ( new Vector3 (), targetResolution);
+```
+
+You can call this method with given color theme.
+
+```C#
+    textDisplay.Render ( new Vector3 (), targetResolution, myColorTheme);
 ```
