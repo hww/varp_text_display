@@ -1,8 +1,8 @@
 # VARP Text Display
 
-This asset is debugging tool for Unity 3D. It render text as a screen overlay with immediate draw API. Other words it draw characters with GL.QUADS and as result it does not produce garbage when text buffer was updated.
+VARP Text Display is a debugging tool for Unity 3D. It renders text as an immediate mode screen overlay, drawing characters with GL.QUADS. In this way, it avoids creating new memory garbage each time the text buffer is updated.
 
-The text dispay has a buffer for each character position and every position contains: character's code, color value and additional _inverse_ flag (used for highligh text or select text). Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
+The text dispay has a buffer for each character position. Each position contains: character's code, color value and additional _inverse_ flag (used for highlighted or selected text). The _inverse_ flag allows to render  a negative version of glyph. Changing individual character codes in the buffer directly updates the corresponding text on the screen.
 
 ## Folders & Files
 
@@ -21,10 +21,10 @@ Table 2. The description for each file.
 | _IDisplay.cs_            | Public API of this asset.             |
 | _TextDisplay.cs_         | Text display source code, implementation of _IDisplay_. |
 | _TargetResolution.cs_    | Target resolution settings.           |
-| _DisplayCursor.cs_       | Cursor movement and screen's regions (windows). |
+| _DisplayCursor.cs_       | Cursor movement and screen regions (windows). |
 | _Xresources.cs_          | Color theme (ScriptableObject).       |
 | _TangoTheme.cs_          | Tango color theme (ScriptableObject). |
-| _DisplayDemoCameraC.cs_  |	The componet for game came with example of using this asset. |
+| _DisplayDemoCameraC.cs_  |	Example Game Camera component demonstrating possible usage. |
 
 ## Usage
 
@@ -43,14 +43,14 @@ To instantiate text display use `new` operator.
     var textDisplay = new TextDisplay ( 64, 24 );
 ```
 
-Mehtod above will create display with default _Tango_ color theme. To alternate colors use your colorTheme as third argument.
+The above method will create a VARP display with default _Tango_ color theme. To alternate colors use your colorTheme as third argument.
 
 ```C#
     var targetResolution = new TargetResolution(1920, 1080);
     var textDisplay = new TextDisplay ( 64, 24, customColorTheme );
 ```
 
-To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that `WriteFormat` will produce garbage anyway.
+To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that `WriteFormat`'s string formatting will produce some memory garbage.
 
 ```C#
     textDisplay.Write('C');
@@ -59,9 +59,9 @@ To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that 
     textDisplay.WriteFormat("\"{0}\"", "Hello World!");
 ```
 
-For other methods read content of _IDisplay.cs_ file.
+For other methods read the _IDisplay.cs_ file.
 
-There are various of methods for changing visibility of dsplay.
+There are various of methods for changing visibility of display.
  
 ```C#
     textDisplay.IsVisible = true;            // Main visibility
@@ -76,7 +76,7 @@ To render display use method _Render_ with two arguments: position and target re
     textDisplay.Render ( new Vector3 (), targetResolution);
 ```
 
-Finaly as explample the next fragment of code will print text which will looks like at picture below.
+Finally, as example this fragment of code will print text appearing like the screenshot below.
 
 ```C#
     textDisplay.WriteLine("Text Display");
