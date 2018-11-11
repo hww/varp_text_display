@@ -2,7 +2,7 @@
 
 This asset is debugging tool for Unity 3D. It render text as a screen overlay with usubg immediate draw. Other words it draw characters with GL.QUADS and as result it does not produce garbage when update text.
 
-The text dispay has a buffer for characters and every character has a color value and additional inverse flag. Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
+The text dispay has a buffer for characters and every character has a color value and additional inverse flag (used for highligh text or select text). Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
 
 ## Folders & Files
 
@@ -31,6 +31,8 @@ Table 2. The description for each file.
 - Copy VARP from Resources folder to Resources folder of your project.
 - Copy VARP folder inside Plugins folder.
 - Add demo component DisplayDemoCameraC to your camera. Run scene and play with component's values.
+
+![Component](/Images/DisplayDemoCameraC.GIF)
 
 ## Introduction to API
 
@@ -72,6 +74,24 @@ To render display use method _Render_ with two arguments: position and target re
 ```C#
     textDisplay.Render ( new Vector3 (), targetResolution);
 ```
+
+For example this next fragment of code will print text which will looks like at picture below.
+
+```C#
+    textDisplay.WriteLine("Text Display");
+    textDisplay.Write("Set ");
+    textDisplay.SetColor(Color.red);
+    textDisplay.Write("Red");
+    textDisplay.SetColor(Color.white);
+    textDisplay.WriteLine(" Color");
+    textDisplay.Write("Set ");
+    textDisplay.IsNegative = true;
+    textDisplay.Write("Selected");
+    textDisplay.IsNegative = false;
+    textDisplay.WriteLine(" Text");
+```
+
+![Screen Shot](/Images/ScreenShot.GIF)
 
 ## ToDo
 
