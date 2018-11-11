@@ -32,7 +32,7 @@ Table 2. The description for each file.
 - Copy VARP folder inside Plugins folder.
 - Add demo component DisplayDemoCameraC to your camera. Run scene and play with component's values.
 
-![Component](/Images/DisplayDemoCameraC.GIF)
+![Component](/Images/DemoComponent.png)
 
 ## Introduction to API
 
@@ -79,19 +79,19 @@ For example this next fragment of code will print text which will looks like at 
 
 ```C#
     textDisplay.WriteLine("Text Display");
-    textDisplay.Write("Set ");
+    textDisplay.Write("Print ");
     textDisplay.SetColor(Color.red);
     textDisplay.Write("Red");
     textDisplay.SetColor(Color.white);
     textDisplay.WriteLine(" Color");
-    textDisplay.Write("Set ");
+    textDisplay.Write("Print ");
     textDisplay.IsNegative = true;
     textDisplay.Write("Selected");
     textDisplay.IsNegative = false;
     textDisplay.WriteLine(" Text");
 ```
 
-![Screen Shot](/Images/ScreenShot.GIF)
+![Screen Shot](/Images/ScreenShot.png)
 
 ## ToDo
 
