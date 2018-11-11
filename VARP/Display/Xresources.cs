@@ -65,7 +65,7 @@ namespace Code.Display
         public Color Foreground = Color.white;
         public Color CursorColor = Color.red;
         public Color SelectionColor = new Color(0,0,1,0.5f);
-
+        
         public Color[] Colors = new Color[]
         {
             Color.black,

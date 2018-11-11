@@ -35,11 +35,11 @@ namespace Code.Display
         private void Reset()
         {
             // Tango color palette
-            Background = ParseHtmlColor ("#2e343680");
+            Background = ParseHtmlColor ("#000000C0");
             Foreground = ParseHtmlColor ( "#eeeeec" );
             CursorColor = ParseHtmlColor ( "#8ae23480" );
             // foreground color for underline
-            SelectionColor = ParseHtmlColor ("#8ae23480");
+            SelectionColor = ParseHtmlColor ("#FF0000C0");
             // black dark/light
             Colors[ 0 ] = ParseHtmlColor ( "#2e3436" );
             Colors[ 8 ] = ParseHtmlColor ( "#6e706b" );
@@ -64,8 +64,13 @@ namespace Code.Display
             // white dark/light
             Colors[ 7 ] = ParseHtmlColor ( "#d3d7cf" );
             Colors[ 15 ] = ParseHtmlColor ( "#eeeeec" );
-            
-            SelectionColor = ParseHtmlColor ( "#92659a" );
+        }
+
+        public static Xresources Create()
+        {
+            var theme = new TangoTheme();
+            theme.Reset();
+            return theme;
         }
     }
 }

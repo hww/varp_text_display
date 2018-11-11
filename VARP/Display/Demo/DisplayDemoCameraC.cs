@@ -46,12 +46,12 @@ namespace Code.Display.Demo
             targetResolution = new TargetResolution(1920, 1080 );
             textDisplay = new TextDisplay ( 64, 24 );
             textDisplay.WriteLine("Text Display");
-            textDisplay.Write("Set ");
+            textDisplay.Write("Print ");
             textDisplay.SetColor(Color.red);
             textDisplay.Write("Red");
             textDisplay.SetColor(Color.white);
             textDisplay.WriteLine(" Color");
-            textDisplay.Write("Set ");
+            textDisplay.Write("Print ");
             textDisplay.IsNegative = true;
             textDisplay.Write("Selected");
             textDisplay.IsNegative = false;

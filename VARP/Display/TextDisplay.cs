@@ -40,7 +40,7 @@ namespace Code.Display
         public TextDisplay ( int sizeX, int sizeY,  Xresources colorTheme = null)
         {
             // load resources 
-            theme = colorTheme!=null ? colorTheme : new TangoTheme ( );
+            theme = colorTheme!=null ? colorTheme : TangoTheme.Create ( );
             cursor = new DisplayCursor ( this );
             backgroundMaterial = ReadMaterial ( "VARP/DebugDraw/GLlineZOff" );
             defaultMaterial = ReadMaterial("VARP/DebugDraw/GLFontZOff");
@@ -346,7 +346,6 @@ namespace Code.Display
         public void ResetColor ( )
         {
             foregroundColor = theme.Foreground;
-            backgroundColor = theme.Background;
         }
         
         /// <inheritdoc />
@@ -358,7 +357,7 @@ namespace Code.Display
         /// <inheritdoc />
         public void SetBackgroundColor ( Color color )
         {
-            backgroundColor = color;
+            theme.Background = color;
         }
 
         // ----------------------------------------------------------------------------------------------------
@@ -450,7 +449,7 @@ namespace Code.Display
             {
                 backgroundMaterial.SetPass ( 0 );
                 GL.Begin ( GL.QUADS );
-                GL.Color ( backgroundColor );
+                GL.Color ( theme.Background );
                 GL.Vertex ( position + new Vector3 ( backgroundRectangle.min.x, backgroundRectangle.max.y, -1f ) );
                 GL.Vertex ( position + new Vector3 ( backgroundRectangle.max.x, backgroundRectangle.max.y, -1f ) );
                 GL.Vertex ( position + new Vector3 ( backgroundRectangle.max.x, backgroundRectangle.min.y, -1f ) );
@@ -466,11 +465,15 @@ namespace Code.Display
                 var negativeCharsCount = 0;
                 for ( var addr = 0 ; addr < bufferSize ; addr++ )
                 {
-                    if ( displayItemsBuffer[ addr ].IsNegative )
+                    var c = displayItemsBuffer[addr].Character;
+                    if (displayItemsBuffer[addr].IsNegative)
+                    {
                         negativeCharactersIndices[ negativeCharsCount++ ] = addr;
-                    if ( displayItemsBuffer[ addr ].Character == ' ' )
                         continue;
-                    if ( defaultFont.GetCharacterInfo ( displayItemsBuffer[ addr ].Character, out var info ) )
+                    }
+                    if ( c == ' ' )
+                        continue;
+                    if ( defaultFont.GetCharacterInfo ( c, out var info ) )
                     {
                         var charpos = position + charactersPositions[ addr ];
                         GL.Color ( displayItemsBuffer[ addr ].Foreground );
@@ -485,29 +488,55 @@ namespace Code.Display
                     }
                 }
                 GL.End ( );
+                
                 // Render negative characters
                 backgroundMaterial.SetPass ( 0 );
                 GL.Begin ( GL.QUADS );
                 GL.Color ( theme.SelectionColor );
                 var cursorSize = GetCursorSize ( );
+                var cursorOffset = new Vector3(0, CURSOR_OFFSET_Y,0);
                 for ( var i = 0 ; i < negativeCharsCount ; i++ )
                 {
                     var addr = negativeCharactersIndices[ i ];
-                    var min = charactersPositions[ addr ];
+                    var min = position + charactersPositions[ addr ] + cursorOffset;
                     var max = min + cursorSize;
-                    GL.Vertex ( position + new Vector3 ( min.x, max.y, 0 ) );
-                    GL.Vertex ( position + new Vector3 ( max.x, max.y, 0 ) );
-                    GL.Vertex ( position + new Vector3 ( max.x, min.y, 0 ) );
-                    GL.Vertex ( position + new Vector3 ( min.x, min.y, 0 ) );
+                    GL.Vertex ( new Vector3 ( min.x, max.y, 0 ) );
+                    GL.Vertex ( new Vector3 ( max.x, max.y, 0 ) );
+                    GL.Vertex ( new Vector3 ( max.x, min.y, 0 ) );
+                    GL.Vertex ( new Vector3 ( min.x, min.y, 0 ) );
+                }
+                GL.End ( );
+                // Render inverted fonts                
+                defaultMaterial.SetPass ( 0 );
+                GL.Begin ( GL.QUADS );
+                for ( var i = 0 ; i < negativeCharsCount ; i++ )
+                {
+                    var addr = negativeCharactersIndices[ i ];
+                    var c = displayItemsBuffer[addr].Character;
+                    if ( c == ' ' )
+                        continue;
+                    if ( defaultFont.GetCharacterInfo ( c, out var info ) )
+                    {
+                        var charpos = position + charactersPositions[ addr ];
+                        GL.Color ( displayItemsBuffer[ addr ].Foreground );
+                        GL.MultiTexCoord ( 0, info.uvTopLeft );
+                        GL.Vertex ( charpos + new Vector3 ( info.minX, info.maxY, 0 ) );
+                        GL.MultiTexCoord ( 0, info.uvTopRight );
+                        GL.Vertex ( charpos + new Vector3 ( info.maxX, info.maxY, 0 ) );
+                        GL.MultiTexCoord ( 0, info.uvBottomRight );
+                        GL.Vertex ( charpos + new Vector3 ( info.maxX, info.minY, 0 ) );
+                        GL.MultiTexCoord ( 0, info.uvBottomLeft );
+                        GL.Vertex ( charpos + new Vector3 ( info.minX, info.minY, 0 ) );
+                    }
                 }
                 GL.End ( );
             }
             // Render cursor
             if ( IsCursorVisible )
             {
+                backgroundMaterial.SetPass ( 0 );
                 var min = position + charactersPositions[cursor.X + cursor.Y * BufferWidth];
-                const float cursorOffsetY = -4;
-                min.y += cursorOffsetY;
+                min.y += CURSOR_OFFSET_Y;
                 var max = min + GetCursorSize ( );
                 GL.Begin ( GL.QUADS );
                 GL.Color ( theme.CursorColor );
@@ -521,6 +550,8 @@ namespace Code.Display
             GL.invertCulling = false;
         }
 
+        private const float CURSOR_OFFSET_Y = -4;
+        
         // -- Frame buffer -----------------------------------------------------------------------------------
 
         private struct DisplayItem
@@ -559,7 +590,6 @@ namespace Code.Display
         private Vector2 backgroundPads = new Vector2 ( 5, 5 );
         private readonly Xresources theme;
         private Color foregroundColor = Color.white;
-        private Color backgroundColor = Color.black;
 
         private static int TabSize = 8;
 
