@@ -1,7 +1,7 @@
 ﻿// =============================================================================
 // MIT License
 // 
-// Copyright (c) [2018] [Valeriya Pudova] https://github.com/hww
+// Copyright (c) 2018 Valeriya Pudova (hww.github.io)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ using UnityEngine;
 
 namespace Code.Display
 {
-    [CreateAssetMenu(menuName = "Rocket/Display/Tango Theme")]
+    [CreateAssetMenu(menuName = "VARP/Display/Tango Theme")]
     public class TangoTheme : Xresources
     {
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿// =============================================================================
 // MIT License
 // 
-// Copyright (c) [2018] [Valeriya Pudova] https://github.com/hww
+// Copyright (c) 2018 Valeriya Pudova (hww.github.io)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@ namespace Code.Display
             ResetColor();
         }
 
-        // for all ASCII characters check the advance field to chos biggest
+        // for all ASCII characters check the advance field to chose biggest
         private float GetMaxCharWidth()
         {
             float max = 0;
