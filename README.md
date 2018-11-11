@@ -6,14 +6,15 @@ Every character on screen has color and additional _inverse_ flag.
 
 ## Folders & Files
 
-
+Table 1. The description for each folder. 
 
 | Folder                           | Info                      | 
 |----------------------------------|---------------------------|
 | _/VARP/Display_          | Source code of this asset. |
 | _/VARP/Display/Demo_     | Demo scene. |
+| _/Resources/VARP/DebugDraw_ |	Font, shaders and materials for this assset. |
 
-The description for each file see below. 
+Table 2. The description for each file. 
 
 | File                 | Info                                  |
 |----------------------|---------------------------------------|
@@ -23,11 +24,14 @@ The description for each file see below.
 | _DisplayCursor.cs_   | Cursor movement and screen's regions (windows). |
 | _Xresources.cs_      | Color theme (ScriptableObject). |
 | _TangoTheme.cs_      | Tango color theme (ScriptableObject). |
+| _DisplayDemoCameraC.cs_ |	The componet for game came with example of using this asset. |
 
 ## Usage
 
-Copy VARP folder to your project, for example to Plugins folder.
-Crate new game object 
+- Copy VARP from Resources folder to Resources folder of your project.
+- Copy VARP folder inside Plugins folder.
+- Add demo component DisplayDemoCameraC to your camera. Run scene and play with component's values.
+
 ## Introduction to API
 
 To instantiate display use `new` operator.
@@ -68,3 +72,6 @@ To render display use method _Render_ with two arguments: position and target re
     textDisplay.Render ( new Vector3 (), targetResolution);
 ```
 
+## ToDo
+
+Add support of Escape sequences. 
