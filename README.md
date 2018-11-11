@@ -1,19 +1,19 @@
 # VARP Text Display
 
-Debugging tool for Unity 3D. Render text display as a screen overlay. Difference between this tool and using Text widget is: this tool does not produce garbage any time when you need to change single character. To work w/o garbage it uses immediate draw. Other words it draw characters with _GL.QUADS_.
+This asset is debugging tool for Unity 3D. It render text as a screen overlay with usubg immediate draw. Other words it draw characters with _GL.QUADS_ and as result it does not produce garbage when update text. 
 
-Every character on screen has color and additional _inverse_ flag.
+The text dispay has a buffer for sccharacters and every character has a color value and additional _inverse_ flag. Last one allow to render negative version of glyph.
 
 ## Folders & Files
 
-Copy VARP folder inside _Plugins_ folder. The result will be.
+Table 1: The description for each folder. 
 
 | Folder                           | Info                      | 
 |----------------------------------|---------------------------|
 | _/Plugins/VARP/Display_          | Source code of this asset. |
 | _/Plugins/VARP/Display/Demo_     | Demo scene. |
 
-The description for each file see below. 
+Table 2: The description for each file. 
 
 | File                 | Info                                  |
 |----------------------|---------------------------------------|
@@ -23,6 +23,11 @@ The description for each file see below.
 | _DisplayCursor.cs_   | Cursor movement and screen's regions (windows). |
 | _Xresources.cs_      | Color theme (ScriptableObject). |
 | _TangoTheme.cs_      | Tango color theme (ScriptableObject). |
+| _DisplayDemoCameraC.cs_ | The componet for game came with example of using this asset. |
+
+## Installing 
+
+Copy VARP folder inside _Plugins_ folder. Then add demo component _DisplayDemoCameraC_ to your camera. Run scene and play with compentne's values.
 
 ## Introduction to API
 
