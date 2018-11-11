@@ -24,7 +24,7 @@ The description for each file see below.
 | _Xresources.cs_      | Color theme (ScriptableObject) |
 | _TangoTheme.cs_      | Tango color theme |
 
-## API
+## Introduction to API
 
 To instantiate display use `new` operator.
 
