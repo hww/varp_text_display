@@ -8,14 +8,14 @@ Every character on screen has color and additional _inverse_ flag.
 
 Copy VARP folder inside _Plugins_ folder. The result will be.
 
-|                                  |                           | 
+| Folder                           | Info                      | 
 |----------------------------------|---------------------------|
 | _/Plugins/VARP/Display_          | Source code of this asset. |
 | _/Plugins/VARP/Display/Demo_     | Demo scene. |
 
 The description for each file see below. 
 
-|                      |                                       |
+| File                 | Info                                  |
 |----------------------|---------------------------------------|
 | _IDisplay.cs_        | Public API of this asset. |
 | _TextDisplay.cs_     | Text display source code, implementation of _IDisplay_. |
