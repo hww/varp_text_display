@@ -1,8 +1,8 @@
 # VARP Text Display
 
-Debugging tool for Unity 3D. Render text display as a screen overlay. Difference between this tool and using Text widget is: this tool does not produce garbage any time when you need to change single character. To work w/o garbage it uses immediate draw. Other words it draw characters with _GL.QUADS_.
+This asset is debugging tool for Unity 3D. It render text as a screen overlay with usubg immediate draw. Other words it draw characters with GL.QUADS and as result it does not produce garbage when update text.
 
-Every character on screen has color and additional _inverse_ flag.
+The text dispay has a buffer for characters and every character has a color value and additional inverse flag. Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
 
 ## Folders & Files
 
