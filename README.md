@@ -8,23 +8,21 @@ Every character on screen has color and additional _inverse_ flag.
 
 Copy VARP folder inside _Plugins_ folder. The result will be.
 
-_/Plugins/VARP/Display_          Source code of this asset
-
-_/Plugins/VARP/Display/Demo_     Source code of demo scene
+|                                  |                           | 
+|----------------------------------|---------------------------|
+| _/Plugins/VARP/Display_          | Source code of this asset |
+| _/Plugins/VARP/Display/Demo_     | The demo scene |
 
 The description for each file see below. 
 
-_IDisplay.cs_            Public API of this asset
-
-_TextDisplay.cs_         Text display source code.
-
-_TargetResolution.cs_    Target resolution settings
-
-_DisplayCursor.cs_       Cursor movement and window regions.
-
-_Xresources.cs_          Color theme (ScriptableObject)
-
-_TangoTheme.cs_          Tango color theme
+|                      |                                       |
+|----------------------|---------------------------------------|
+| _IDisplay.cs_        | Public API of this asset |
+| _TextDisplay.cs_     | Text display source code |
+| _TargetResolution.cs_| Target resolution settings |
+| _DisplayCursor.cs_   | Cursor movement and window regions |
+| _Xresources.cs_      | Color theme (ScriptableObject) |
+| _TangoTheme.cs_      | Tango color theme |
 
 ## API
 
