@@ -1,49 +1,49 @@
 # VARP Text Display
 
-This asset is debugging tool for Unity 3D. It render text as a screen overlay with usubg immediate draw. Other words it draw characters with GL.QUADS and as result it does not produce garbage when update text.
+This asset is debugging tool for Unity 3D. It render text as a screen overlay with immediate draw API. Other words it draw characters with GL.QUADS and as result it does not produce garbage when text buffer was updated.
 
-The text dispay has a buffer for characters and every character has a color value and additional inverse flag (used for highligh text or select text). Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
+The text dispay has a buffer for each character position and every position contains: character's code, color value and additional _inverse_ flag (used for highligh text or select text). Last one allow to render negative version of glyph. Just change character code in the buffer will character on screen.
 
 ## Folders & Files
 
 Table 1. The description for each folder. 
 
-| Folder                           | Info                      | 
-|----------------------------------|---------------------------|
-| _/VARP/Display_          | Source code of this asset. |
-| _/VARP/Display/Demo_     | Demo scene. |
-| _/Resources/VARP/DebugDraw_ |	Font, shaders and materials for this assset. |
+| Folder                           | Info                       | 
+|----------------------------------|----------------------------|
+| _/VARP/Display_                  | Source code of this asset. |
+| _/VARP/Display/Demo_             | Demo scene. |
+| _/Resources/VARP/DebugDraw_      | Font, shaders and materials for this assset. |
 
 Table 2. The description for each file. 
 
-| File                 | Info                                  |
-|----------------------|---------------------------------------|
-| _IDisplay.cs_        | Public API of this asset. |
-| _TextDisplay.cs_     | Text display source code, implementation of _IDisplay_. |
-| _TargetResolution.cs_| Target resolution settings. |
-| _DisplayCursor.cs_   | Cursor movement and screen's regions (windows). |
-| _Xresources.cs_      | Color theme (ScriptableObject). |
-| _TangoTheme.cs_      | Tango color theme (ScriptableObject). |
-| _DisplayDemoCameraC.cs_ |	The componet for game came with example of using this asset. |
+| File                     | Info                                  |
+|--------------------------|---------------------------------------|
+| _IDisplay.cs_            | Public API of this asset.             |
+| _TextDisplay.cs_         | Text display source code, implementation of _IDisplay_. |
+| _TargetResolution.cs_    | Target resolution settings.           |
+| _DisplayCursor.cs_       | Cursor movement and screen's regions (windows). |
+| _Xresources.cs_          | Color theme (ScriptableObject).       |
+| _TangoTheme.cs_          | Tango color theme (ScriptableObject). |
+| _DisplayDemoCameraC.cs_  |	The componet for game came with example of using this asset. |
 
 ## Usage
 
-- Copy VARP from Resources folder to Resources folder of your project.
-- Copy VARP folder inside Plugins folder.
-- Add demo component DisplayDemoCameraC to your camera. Run scene and play with component's values.
+- Copy _VARP_ from _Resources_ folder to _Resources_ folder of your project.
+- Copy _VARP_ folder inside _Plugins_ folder.
+- Add demo component _DisplayDemoCameraC_ to your camera. Run scene and play with component's values.
 
 ![Component](/Images/DemoComponent.png)
 
 ## Introduction to API
 
-To instantiate display use `new` operator.
+To instantiate text display use `new` operator.
 
 ```C#
     var targetResolution = new TargetResolution(1920, 1080);
     var textDisplay = new TextDisplay ( 64, 24 );
 ```
 
-Mehtod above will create display with default Tango color theme. To alternate colors use your colorTheme as third argument.
+Mehtod above will create display with default _Tango_ color theme. To alternate colors use your colorTheme as third argument.
 
 ```C#
     var targetResolution = new TargetResolution(1920, 1080);
@@ -58,9 +58,10 @@ To print text use `Write`, `WriteLine`, `WriteFormat` method. Keep in mind that 
     textDisplay.WriteLine("Hello World!");
     textDisplay.WriteFormat("\"{0}\"", "Hello World!");
 ```
+
 For other methods read content of _IDisplay.cs_ file.
 
-There are various of methods for alternating visibility.
+There are various of methods for changing visibility of dsplay.
  
 ```C#
     textDisplay.IsVisible = true;            // Main visibility
@@ -69,13 +70,13 @@ There are various of methods for alternating visibility.
     textDisplay.IsCursorVisible = true;      // Cursor visibility
 ```
 
-To render display use method _Render_ with two arguments: position and target resolution.
+To render display use method _Render_ with two arguments: position and target resolution object.
 
 ```C#
     textDisplay.Render ( new Vector3 (), targetResolution);
 ```
 
-For example this next fragment of code will print text which will looks like at picture below.
+Finaly as explample the next fragment of code will print text which will looks like at picture below.
 
 ```C#
     textDisplay.WriteLine("Text Display");
@@ -93,6 +94,6 @@ For example this next fragment of code will print text which will looks like at 
 
 ![Screen Shot](/Images/ScreenShot.png)
 
-## ToDo
+## To Do
 
 Add support of Escape sequences. 
