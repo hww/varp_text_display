@@ -52,7 +52,7 @@ There are various of methods for alternating visibility.
     textDisplay.IsCursorVisible = true;      // Cursor visibility
 ```
 
-To render display use method `Render` with two arguments: position and target resolution.
+To render display use method _Render_ with two arguments: position and target resolution.
 
 ```C#
     textDisplay.Render ( new Vector3 (), targetResolution);
