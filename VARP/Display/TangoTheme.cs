@@ -64,6 +64,8 @@ namespace Code.Display
             // white dark/light
             Colors[ 7 ] = ParseHtmlColor ( "#d3d7cf" );
             Colors[ 15 ] = ParseHtmlColor ( "#eeeeec" );
+            
+            SelectionColor = ParseHtmlColor ( "#92659a" );
         }
     }
 }

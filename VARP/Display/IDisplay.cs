@@ -34,6 +34,11 @@ namespace Code.Display
         void SetBufferSize(int width, int height);
         
         /// <summary>
+        /// Write character input field
+        /// </summary>
+        void Write ( char message );
+        
+        /// <summary>
         /// Write text to the input field
         /// </summary>
         void Write ( string message );

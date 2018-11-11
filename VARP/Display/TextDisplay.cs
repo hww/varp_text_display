@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace Code.Display
 {
-    [CreateAssetMenu(menuName = "Rocket/Display/Display")]
+    [CreateAssetMenu(menuName = "VARP/Display/Display")]
     public class TextDisplay : ScriptableObject, IDisplay
     {
         // ----------------------------------------------------------------------------------------------------
@@ -37,14 +37,14 @@ namespace Code.Display
         /// <summary>
         /// Create terminal with this geometry
         /// </summary>
-        public TextDisplay ( int sizeX, int sizeY )
+        public TextDisplay ( int sizeX, int sizeY,  Xresources colorTheme = null)
         {
             // load resources 
-            theme = new TangoTheme ( );
+            theme = colorTheme!=null ? colorTheme : new TangoTheme ( );
             cursor = new DisplayCursor ( this );
-            backgroundMaterial = ReadMaterial ( "Code/DebugDraw/GLlineZOff" );
-            defaultMaterial = ReadMaterial("Code/DebugDraw/GLFontZOff");
-            defaultFont = ReadFont("Code/DebugDraw/GLFont");
+            backgroundMaterial = ReadMaterial ( "VARP/DebugDraw/GLlineZOff" );
+            defaultMaterial = ReadMaterial("VARP/DebugDraw/GLFontZOff");
+            defaultFont = ReadFont("VARP/DebugDraw/GLFont");
             // get font's information
             lineHeight = defaultFont.lineHeight;
             charAdvance = GetMaxCharWidth();
@@ -75,6 +75,13 @@ namespace Code.Display
         // -- ITerminal Methods 
         // ----------------------------------------------------------------------------------------------------
 
+        /// <inheritdoc />
+        public void Write ( char c )
+        {
+            var idx = 0;
+            WriteInternal( c, ref idx );
+        }
+        
         /// <inheritdoc />
         public void Write ( string message )
         {
@@ -107,77 +114,68 @@ namespace Code.Display
             WriteInternal ( string.Format(format, args), ref idx );
         }
 
-        
         private void WriteInternal ( string message, ref int idx )
         {
-
             while ( idx < message.Length )
+                WriteInternal( message[ idx ], ref idx );
+        }
+        private void WriteInternal(char c, ref int idx )
+        {
+            if ( c < ' ' )
             {
-                var c = message[ idx ];
-                if ( c < ' ' )
+                // Escape codes 
+                switch ( c )
                 {
-                    // Escape codes 
-                    switch ( c )
-                    {
-                        case '\a':
-                            Beep ( );
-                            idx++;
-                            break;
-                        case '\b':
-                            cursor.AddX ( -1 );
-                            WriteVisibleCharacter ( ' ', cursor.X, cursor.Y );
-                            idx++;
-                            break;
-                        case '\t':
-                            Tab ( );
-                            idx++;
-                            break;
-                        case '\n':
-                            cursor.NewLine ( );
-                            idx++;
-                            break;
-                        case '\r':
-                            cursor.X = cursor.WindowLeft;
-                            idx++;
-                            break;
-                        case (char)27:
-                            WriteEscapeCharacter ( message, ref idx );
-                            break;
-                        default:
-                            idx++;
-                            break;
-                    }
+                    case '\a':
+                        Beep ( );
+                        idx++;
+                        break;
+                    case '\b':
+                        cursor.AddX ( -1 );
+                        WriteVisibleCharacter ( ' ', cursor.X, cursor.Y );
+                        idx++;
+                        break;
+                    case '\t':
+                        Tab ( );
+                        idx++;
+                        break;
+                    case '\n':
+                        cursor.NewLine ( );
+                        idx++;
+                        break;
+                    case '\r':
+                        cursor.X = cursor.WindowLeft;
+                        idx++;
+                        break;
+                    case (char)27:
+                        WriteEscapeCharacter ( c, ref idx );
+                        break;
+                    default:
+                        idx++;
+                        break;
                 }
-                else if ( c == (char)127 )
+            }
+            else if ( c == (char)127 )
+            {
+                for ( var x = cursor.X ; x < cursor.WindowRight - 1 ; x++ )
                 {
-                    for ( var x = cursor.X ; x < cursor.WindowRight - 1 ; x++ )
-                    {
-                        var addr = x + cursor.Y * BufferWidth;
-                        displayItemsBuffer[ addr ] = displayItemsBuffer[ addr + 1 ];
-                    }
-                    WriteVisibleCharacter ( ' ', cursor.X, cursor.Y );
-                    idx++;
-                    break;
+                    var addr = x + cursor.Y * BufferWidth;
+                    displayItemsBuffer[ addr ] = displayItemsBuffer[ addr + 1 ];
                 }
-                else
-                {
-                    WriteVisibleCharacter ( c, cursor.X, cursor.Y );
-                    cursor.AddX ( 1 );
-                    idx++;
-                    break;
-                }
+                WriteVisibleCharacter ( ' ', cursor.X, cursor.Y );
+                idx++;
+            }
+            else
+            {
+                WriteVisibleCharacter ( c, cursor.X, cursor.Y );
+                cursor.AddX ( 1 );
+                idx++;
             }
         }
 
         // TODO! Implement ESC sequences
-        private void WriteEscapeCharacter ( string message, ref int idx )
+        private void WriteEscapeCharacter ( char c, ref int idx )
         {
-            idx++;
-            switch ( message[ idx ] )
-            {
-                case '[':
-                    break;
-            }
         }
 
         private void WriteVisibleCharacter ( char c, int x, int y )
