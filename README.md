@@ -32,7 +32,7 @@ Table 2. The description for each file.
 - Copy _VARP_ folder inside _Plugins_ folder.
 - Add demo component _DisplayDemoCameraC_ to your camera. Run scene and play with component's values.
 
-![Component](/Images/DemoComponent.png)
+![Component](/Documentation/DemoComponent.png)
 
 ## Introduction to API
 
@@ -92,7 +92,7 @@ Finally, as example this fragment of code will print text appearing like the scr
     textDisplay.WriteLine(" Text");
 ```
 
-![Screen Shot](/Images/ScreenShot.png)
+![Screen Shot](/Documentation/ScreenShot.png)
 
 ## To Do
 
