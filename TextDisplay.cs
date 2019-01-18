@@ -56,7 +56,8 @@ namespace Code.Display
         private float GetMaxCharWidth()
         {
             float max = 0;
-            if (defaultFont.GetCharacterInfo((char) '█', out var space))
+            CharacterInfo space = new CharacterInfo();
+            if (defaultFont.GetCharacterInfo((char) '█', out space))
             {
                 max = Math.Max(max, space.advance);
             }
@@ -64,8 +65,8 @@ namespace Code.Display
             {
                 for (var c = 0; c < 255; c++)
                 {
-                    if (defaultFont.GetCharacterInfo((char) c, out var cspace))
-                        max = Math.Max(max, cspace.advance);
+                    if (defaultFont.GetCharacterInfo((char) c, out space))
+                        max = Math.Max(max, space.advance);
                 }
             }
             return max;
@@ -463,6 +464,7 @@ namespace Code.Display
                 defaultMaterial.SetPass ( 0 );
                 GL.Begin ( GL.QUADS );
                 var negativeCharsCount = 0;
+                CharacterInfo info = new CharacterInfo();
                 for ( var addr = 0 ; addr < bufferSize ; addr++ )
                 {
                     var c = displayItemsBuffer[addr].Character;
@@ -473,7 +475,7 @@ namespace Code.Display
                     }
                     if ( c == ' ' )
                         continue;
-                    if ( defaultFont.GetCharacterInfo ( c, out var info ) )
+                    if ( defaultFont.GetCharacterInfo ( c, out  info ) )
                     {
                         var charpos = position + charactersPositions[ addr ];
                         GL.Color ( displayItemsBuffer[ addr ].Foreground );
@@ -515,7 +517,7 @@ namespace Code.Display
                     var c = displayItemsBuffer[addr].Character;
                     if ( c == ' ' )
                         continue;
-                    if ( defaultFont.GetCharacterInfo ( c, out var info ) )
+                    if ( defaultFont.GetCharacterInfo ( c, out info ) )
                     {
                         var charpos = position + charactersPositions[ addr ];
                         GL.Color ( displayItemsBuffer[ addr ].Foreground );
