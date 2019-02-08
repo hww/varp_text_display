@@ -26,7 +26,7 @@ using UnityEngine;
 
 namespace Code.Display
 {
-    [CreateAssetMenu(menuName = "VARP/Display/Tango Theme")]
+    [CreateAssetMenu(menuName = "VARP/Display/TangoTheme", fileName = "tango-theme")]
     public class TangoTheme : Xresources
     {
         /// <summary>

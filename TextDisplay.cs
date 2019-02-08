@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace Code.Display
 {
-    [CreateAssetMenu(menuName = "VARP/Display/Display")]
+    [CreateAssetMenu(menuName = "VARP/Display/Display", fileName = "display")]
     public class TextDisplay : ScriptableObject, IDisplay
     {
         // ----------------------------------------------------------------------------------------------------
@@ -589,11 +589,9 @@ namespace Code.Display
         private Rect backgroundRectangle;
         private float backgroundWidth;
         private float backgroundHeight;
-        private Vector2 backgroundPads = new Vector2 ( 5, 5 );
+        private readonly Vector2 backgroundPads = new Vector2 ( 5, 5 );
         private readonly Xresources theme;
         private Color foregroundColor = Color.white;
-
-        private static int TabSize = 8;
 
         // -- Read resources ----------------------------------------------------------------------------------
 
