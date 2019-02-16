@@ -32,8 +32,8 @@ namespace Code.Display
 	/// </summary>
 	public struct TargetResolution 
 	{
-		public int Width;
-		public int Height;
+		public readonly int Width;
+		public readonly int Height;
 		
 		[System.NonSerialized] public int Left;
 		[System.NonSerialized] public int Right;
@@ -51,7 +51,7 @@ namespace Code.Display
 		}
 
 		/// <summary>
-		/// Calculate vie-port coordinates for current Screen
+		/// 	Calculate vie-port coordinates for current Screen
 		/// </summary>
 		public void CalculateViewPortCoordinates()
 		{
@@ -59,7 +59,7 @@ namespace Code.Display
 		}
 		
 		/// <summary>
-		/// Calculate vie-port coordinates for given resolution
+		/// 	Calculate vie-port coordinates for given resolution
 		/// </summary>
 		public void CalculateViewPortCoordinates(int screenWidth, int screenHeight)
 		{

@@ -161,7 +161,9 @@ namespace Code.Display
                 for ( var x = cursor.X ; x < cursor.WindowRight - 1 ; x++ )
                 {
                     var addr = x + cursor.Y * BufferWidth;
-                    displayItemsBuffer[ addr ] = displayItemsBuffer[ addr + 1 ];
+                    IsNegativeBuffer[ addr ] = IsNegativeBuffer[ addr + 1 ];
+                    ForegroundBuffer[ addr ] = ForegroundBuffer[ addr + 1 ];
+                    CharacterBuffer[ addr ] = CharacterBuffer[ addr + 1 ];
                 }
                 WriteVisibleCharacter ( ' ', cursor.X, cursor.Y );
                 idx++;
@@ -181,7 +183,9 @@ namespace Code.Display
 
         private void WriteVisibleCharacter ( char c, int x, int y )
         {
-            displayItemsBuffer[ x + y * BufferWidth ] = new DisplayItem ( ) { Character = c, Foreground = foregroundColor, IsNegative = IsNegative };
+            IsNegativeBuffer[ x + y * BufferWidth ] = IsNegative;
+            ForegroundBuffer[ x + y * BufferWidth ] = foregroundColor;
+            CharacterBuffer[ x + y * BufferWidth ] = c;
         }
 
         /// <inheritdoc />
@@ -205,7 +209,9 @@ namespace Code.Display
             cursor.SetWindowSize ( width, height );
             // allocate memory
             charactersPositions = new Vector3[ bufferSize ];
-            displayItemsBuffer = new DisplayItem[ bufferSize ];
+            IsNegativeBuffer = new bool[ bufferSize ];
+            CharacterBuffer = new char[ bufferSize ];
+            ForegroundBuffer = new Color[ bufferSize ];
             negativeCharactersIndices = new int[ bufferSize ];
             // calculate background and the text size
             textWidth = charAdvance * BufferWidth;
@@ -263,8 +269,11 @@ namespace Code.Display
             var ymax = targetHeight - targetTop - 1;
             for ( var y = targetTop ; y <= ymax ; y++ )
             {
-                for ( var x = targetLeft ; x <= xmax ; x++ )
-                    displayItemsBuffer[ x + y * BufferWidth ] = new DisplayItem ( ) { Character = character, Foreground = color };
+                for (var x = targetLeft; x <= xmax; x++)
+                {
+                    CharacterBuffer[ x + y * BufferWidth ] = character;
+                    ForegroundBuffer[ x + y * BufferWidth ] = color;
+                }
             }
         }
 
@@ -420,14 +429,22 @@ namespace Code.Display
             if ( sourceLeft >= targetLeft )
             {
                 var upto = sourceLeft + width;
-                for ( var x = sourceLeft ; x < upto ; x++ )
-                    displayItemsBuffer[ x + dstLine ] = displayItemsBuffer[ x + srcLine ];
+                for (var x = sourceLeft; x < upto; x++)
+                {
+                    CharacterBuffer[ x + dstLine ] = CharacterBuffer[ x + srcLine ];
+                    IsNegativeBuffer[ x + dstLine ] = IsNegativeBuffer[ x + srcLine ];
+                    ForegroundBuffer[ x + dstLine ] = ForegroundBuffer[ x + srcLine ];
+                }
             }
             else
             {
                 var upto = sourceLeft;
-                for ( var x = sourceLeft + width - 1 ; x >= upto ; x-- )
-                    displayItemsBuffer[ x + dstLine ] = displayItemsBuffer[ x + srcLine ];
+                for (var x = sourceLeft + width - 1; x >= upto; x--)
+                {
+                    CharacterBuffer[ x + dstLine ] = CharacterBuffer[ x + srcLine ];
+                    IsNegativeBuffer[ x + dstLine ] = IsNegativeBuffer[ x + srcLine ];
+                    ForegroundBuffer[ x + dstLine ] = ForegroundBuffer[ x + srcLine ];
+                }
             }
         }
         
@@ -467,8 +484,8 @@ namespace Code.Display
                 CharacterInfo info = new CharacterInfo();
                 for ( var addr = 0 ; addr < bufferSize ; addr++ )
                 {
-                    var c = displayItemsBuffer[addr].Character;
-                    if (displayItemsBuffer[addr].IsNegative)
+                    var c = CharacterBuffer[addr];
+                    if (IsNegativeBuffer[addr])
                     {
                         negativeCharactersIndices[ negativeCharsCount++ ] = addr;
                         continue;
@@ -478,7 +495,7 @@ namespace Code.Display
                     if ( defaultFont.GetCharacterInfo ( c, out  info ) )
                     {
                         var charpos = position + charactersPositions[ addr ];
-                        GL.Color ( displayItemsBuffer[ addr ].Foreground );
+                        GL.Color ( ForegroundBuffer[ addr ]);
                         GL.MultiTexCoord ( 0, info.uvTopLeft );
                         GL.Vertex ( charpos + new Vector3 ( info.minX, info.maxY, 0 ) );
                         GL.MultiTexCoord ( 0, info.uvTopRight );
@@ -492,46 +509,50 @@ namespace Code.Display
                 GL.End ( );
                 
                 // Render negative characters
-                backgroundMaterial.SetPass ( 0 );
-                GL.Begin ( GL.QUADS );
-                GL.Color ( theme.SelectionColor );
-                var cursorSize = GetCursorSize ( );
-                var cursorOffset = new Vector3(0, CURSOR_OFFSET_Y,0);
-                for ( var i = 0 ; i < negativeCharsCount ; i++ )
+                if (negativeCharsCount > 0)
                 {
-                    var addr = negativeCharactersIndices[ i ];
-                    var min = position + charactersPositions[ addr ] + cursorOffset;
-                    var max = min + cursorSize;
-                    GL.Vertex ( new Vector3 ( min.x, max.y, 0 ) );
-                    GL.Vertex ( new Vector3 ( max.x, max.y, 0 ) );
-                    GL.Vertex ( new Vector3 ( max.x, min.y, 0 ) );
-                    GL.Vertex ( new Vector3 ( min.x, min.y, 0 ) );
-                }
-                GL.End ( );
-                // Render inverted fonts                
-                defaultMaterial.SetPass ( 0 );
-                GL.Begin ( GL.QUADS );
-                for ( var i = 0 ; i < negativeCharsCount ; i++ )
-                {
-                    var addr = negativeCharactersIndices[ i ];
-                    var c = displayItemsBuffer[addr].Character;
-                    if ( c == ' ' )
-                        continue;
-                    if ( defaultFont.GetCharacterInfo ( c, out info ) )
+                    backgroundMaterial.SetPass ( 0 );
+                    GL.Begin ( GL.QUADS );
+                    GL.Color ( theme.SelectionColor );
+                    var cursorSize = GetCursorSize ( );
+                    var cursorOffset = new Vector3(0, CURSOR_OFFSET_Y,0);
+                    for ( var i = 0 ; i < negativeCharsCount ; i++ )
                     {
-                        var charpos = position + charactersPositions[ addr ];
-                        GL.Color ( displayItemsBuffer[ addr ].Foreground );
-                        GL.MultiTexCoord ( 0, info.uvTopLeft );
-                        GL.Vertex ( charpos + new Vector3 ( info.minX, info.maxY, 0 ) );
-                        GL.MultiTexCoord ( 0, info.uvTopRight );
-                        GL.Vertex ( charpos + new Vector3 ( info.maxX, info.maxY, 0 ) );
-                        GL.MultiTexCoord ( 0, info.uvBottomRight );
-                        GL.Vertex ( charpos + new Vector3 ( info.maxX, info.minY, 0 ) );
-                        GL.MultiTexCoord ( 0, info.uvBottomLeft );
-                        GL.Vertex ( charpos + new Vector3 ( info.minX, info.minY, 0 ) );
+                        var addr = negativeCharactersIndices[ i ];
+                        var min = position + charactersPositions[ addr ] + cursorOffset;
+                        var max = min + cursorSize;
+                        GL.Vertex ( new Vector3 ( min.x, max.y, 0 ) );
+                        GL.Vertex ( new Vector3 ( max.x, max.y, 0 ) );
+                        GL.Vertex ( new Vector3 ( max.x, min.y, 0 ) );
+                        GL.Vertex ( new Vector3 ( min.x, min.y, 0 ) );
                     }
+                    GL.End ( );
+                    
+                    // Render inverted fonts                
+                    defaultMaterial.SetPass ( 0 );
+                    GL.Begin ( GL.QUADS );
+                    for ( var i = 0 ; i < negativeCharsCount ; i++ )
+                    {
+                        var addr = negativeCharactersIndices[ i ];
+                        var c = CharacterBuffer[addr];
+                        if ( c == ' ' )
+                            continue;
+                        if ( defaultFont.GetCharacterInfo ( c, out info ) )
+                        {
+                            var charpos = position + charactersPositions[ addr ];
+                            GL.Color ( ForegroundBuffer[ addr ] );
+                            GL.MultiTexCoord ( 0, info.uvTopLeft );
+                            GL.Vertex ( charpos + new Vector3 ( info.minX, info.maxY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvTopRight );
+                            GL.Vertex ( charpos + new Vector3 ( info.maxX, info.maxY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvBottomRight );
+                            GL.Vertex ( charpos + new Vector3 ( info.maxX, info.minY, 0 ) );
+                            GL.MultiTexCoord ( 0, info.uvBottomLeft );
+                            GL.Vertex ( charpos + new Vector3 ( info.minX, info.minY, 0 ) );
+                        }
+                    }
+                    GL.End ( );
                 }
-                GL.End ( );
             }
             // Render cursor
             if ( IsCursorVisible )
@@ -556,21 +577,16 @@ namespace Code.Display
         
         // -- Frame buffer -----------------------------------------------------------------------------------
 
-        private struct DisplayItem
-        {
-            public char Character;         // character code
-            public Color Foreground;       // foreground color
-            public bool IsNegative;        // is negative font
-        }
-        private DisplayItem[] displayItemsBuffer;     // Display buffer for every character of screen
+        private char[] CharacterBuffer;               // Display buffer for every character of screen
+        private Color[] ForegroundBuffer;             // Display buffer for every character of screen
+        private bool[] IsNegativeBuffer;              // Display buffer for every character of screen
         private Vector3[] charactersPositions;        // PreCalculated position for each character
         private int[] negativeCharactersIndices;      // There will be indexes of negative characters
 
-        // -- terminal's fields -------------------------------------------------------------------------------
+        // -- terminal fields --------------------------------------------------------------------------------
 
         public bool IsVisible;
         public bool IsBackgroundVisible;
-        public bool IsWindowVisible;
         public bool IsCursorVisible;
         public bool IsTextVisible = true;
         public bool IsNegative;
