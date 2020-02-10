@@ -1,5 +1,7 @@
 # VARP Text Display
 
+N.B. This project is closed because Unity's direct draw API is slow. Faster version of this terminal will be published here one day
+
 VARP Text Display is a debugging tool for Unity 3D. It renders text as an immediate mode screen overlay, drawing characters with GL.QUADS. In this way, it avoids creating new memory garbage each time the text buffer is updated.
 
 The text dispay has a buffer for each character position. Each position contains: character's code, color value and additional _inverse_ flag (used for highlighted or selected text). The _inverse_ flag allows to render  a negative version of glyph. Changing individual character codes in the buffer directly updates the corresponding text on the screen.
